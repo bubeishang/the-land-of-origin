@@ -1,0 +1,59 @@
+#include<iostream>
+using namespace std;
+template <typename T>
+class Limitvalue
+{
+private:
+	T minvalue;
+	T maxvalue;
+	T currentvalue;
+	T limit(T current) {
+		if (current > maxvalue) {
+			return maxvalue;
+		}
+		else if (current < minvalue) {
+			return minvalue;
+		}
+		else return current;
+
+	}//这用来限制最大和最小角度，如果当前的值超过了最大值，就算作最大，最小亦然
+public:
+	Limitvalue(T current, T min, T max):minvalue(min),maxvalue(max),currentvalue(limit(current)){}//初始化
+	Limitvalue& operator=(T value) {
+		currentvalue = limit(value);
+		return *this;
+	}//赋值
+	Limitvalue& operator+=(T value) {
+		currentvalue = limit(currentvalue + value);
+		return *this;
+	}//加角度
+	Limitvalue& operator-=(T value) {
+		currentvalue = limit(currentvalue - value);
+		return *this;
+	}//减角度
+	T val() {
+		return currentvalue;
+	}//获得当前值，用来验证
+
+};
+int main()
+{
+	Limitvalue<int> intvalue(100, 0, 180);
+	cout << intvalue.val() << endl;
+	intvalue += 70;
+	cout << intvalue.val() << endl;
+	intvalue += 80;//超了，应该算为180
+	cout << intvalue.val() << endl;
+	intvalue -= 100;
+	cout << intvalue.val() << endl;
+	intvalue -= 300;//小了，算为0
+	cout << intvalue.val() << endl;
+	intvalue = 50;//赋值
+	cout << intvalue.val() << endl;
+	intvalue = 200;//超了，算为180
+	cout << intvalue.val() << endl;
+
+}
+
+
+
